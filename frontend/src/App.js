@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap';
-import { HashRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
 
 
 import Header from './components/Header';
@@ -13,9 +13,10 @@ function App() {
       <Header />
       <main className="py-3">
         <Container>
-          <HomeScreen/>
-          {/* <Route path='/' component={HomeScreen} exact />
-          <Route path='/product/:id' component={ProductScreen} /> */}
+          <Routes>
+          <Route exact path='/' component={<HomeScreen/>} />
+          <Route path='/product/:id' component={<ProductScreen/>} />
+          </Routes>
         </Container>
       </main>
       <Footer />

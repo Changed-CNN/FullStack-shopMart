@@ -1,24 +1,38 @@
 import React, {useState,useEffect} from 'react';
-import { Link, useParams } from 'react-router-dom'
-import { Row, Col, Image, ListGroup, Button, Card } from 'react-bootstrap'
-import Rating from '../components/Rating'
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Row, Col, Image, ListGroup, Button, Card, Form } from 'react-bootstrap'
+import Rating from '../components/Rating';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import { listProductDetails } from '../actions/productActions'
 
-function ProductScreen() {
-    const [product,setProduct] = useState([])
-    const {id} = useParams();
+
+function ProductScreen({match}) {
+    const [qty,setQty] = useState(1)
+
+    const {id} = useParams()
+    const history = useNavigate()
+    const dispatch = useDispatch()
+    const productDetails = useSelector(state => state.productDetails)
+    const { loading, error, product } = productDetails
+
     useEffect(() => {
-      async function fetchProduct(){
-        const {data} = await axios.get(`/api/products/${id}`)
-        setProduct(data)
-      }
-      fetchProduct()
-    })
+      dispatch(listProductDetails(id))
+    },[dispatch, match, id])
+
+    const addToCartHandler = () => {
+        history(`/cart/${id}?qty=${qty}`)
+    }
 
     return (
         <div>
             <Link to='/' className='btn btn-light my-3'>Go Back</Link>
-            <Row>
+            {
+                loading ? <Loader/>
+                : error ? <Message variant='danger'>{error}</Message>
+                : (
+                    <Row>
                 <Col md={6}>
                     <Image src={product.image} alt={product.name} fluid />
                 </Col>
@@ -59,13 +73,40 @@ function ProductScreen() {
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
+                            {product.countInStock > 0 && (
+                                                <ListGroup.Item>
+                                                    <Row>
+                                                        <Col>Qty</Col>
+                                                        <Col xs='auto' className='my-1'>
+                                                            <Form.Select
+                                                                as="select"
+                                                                value={qty}
+                                                                onChange={(e) => setQty(e.target.value)}
+                                                            >
+                                                                {
+
+                                                                    [...Array(product.countInStock).keys()].map((x) => (
+                                                                        <option key={x + 1} value={x + 1}>
+                                                                            {x + 1}
+                                                                        </option>
+                                                                    ))
+                                                                }
+
+                                                            </Form.Select>
+                                                        </Col>
+                                                    </Row>
+                                                </ListGroup.Item>
+                                            )}
                             <ListGroup.Item>
-                                <Button className='btn-black' disabled={product.countInStock === 0} type='button'>Add to Cart</Button>
+                                <Button onClick={addToCartHandler} className='btn-black' disabled={product.countInStock === 0} type='button'>Add to Cart</Button>
                             </ListGroup.Item>
                         </ListGroup>
                     </Card>
                 </Col>
             </Row>
+                )
+            }
+            
         </div>                   
     );
 }

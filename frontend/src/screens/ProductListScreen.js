@@ -5,7 +5,7 @@ import { Table, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-// import Paginate from '../components/Paginate'
+import Paginate from '../components/Paginate'
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
@@ -26,7 +26,6 @@ function ProductListScreen({ match }) {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
-    // let keyword = history.location.search
     const location = useLocation()
     let keyword = location.search
     useEffect(() => {
@@ -119,7 +118,7 @@ function ProductListScreen({ match }) {
                                     ))}
                                 </tbody>
                             </Table>
-                            {/* <Paginate pages={pages} page={page} isAdmin={true} /> */}
+                            <Paginate pages={pages} page={page} isAdmin={true} />
                         </div>
                     )}
         </div>

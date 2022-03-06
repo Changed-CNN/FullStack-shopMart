@@ -10,9 +10,10 @@ import { listProductDetails, updateProduct } from '../actions/productActions'
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
 
 
-function ProductEditScreen({ match }) {
+function ProductEditScreen() {
     
-    const productId = useParams()
+    const {id} = useParams()
+    const productId = id
     const history = useNavigate()
     
     const [name, setName] = useState('')

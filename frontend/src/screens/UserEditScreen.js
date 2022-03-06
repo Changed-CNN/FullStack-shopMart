@@ -8,7 +8,7 @@ import FormContainer from '../components/FormContainer'
 import { getUserDetails, updateUser } from '../actions/userActions'
 import { USER_UPDATE_RESET } from '../constants/userConstants'
 
-function UserEditScreen({ match }) {
+function UserEditScreen() {
 
 
     const [name, setName] = useState('')
@@ -17,7 +17,8 @@ function UserEditScreen({ match }) {
 
     const dispatch = useDispatch()
     const history = useNavigate()
-    const userId = useParams()
+    const {id} = useParams()
+    const userId = id
 
     const userDetails = useSelector(state => state.userDetails)
     const { error, loading, user } = userDetails
